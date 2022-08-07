@@ -115,16 +115,16 @@ class Parser(BaseStatementParser):
         # Use str() to prevent rounding errors
         bank_account_to = transaction.data.get('customer_reference')
         amount = Decimal(str(transaction.data['amount'].amount))
-        memo = transaction.data['transaction_details']
+        memo = transaction.data.get('transaction_details', transaction.data.get('purpose', ''))
         memo = memo.replace("\n", '')
-        memo = memo.replace(transaction.data['customer_reference'], '', 1)
-        memo = memo.replace(transaction.data['extra_details'], '', 1).strip()
+        customer_reference = transaction.data.get('customer_reference', '')
+        memo = memo.replace(customer_reference, '', 1)
+        extra_details = transaction.data.get('extra_details', '')
+        memo = memo.replace(extra_details, '', 1).strip()
         memo = memo if memo != '' else 'UNKNOWN'
         payee = None
-        if transaction.data['customer_reference'] != ''\
-           and transaction.data['extra_details'] != '':
-            payee = "{1} ({0})".format(transaction.data['customer_reference'],
-                                       transaction.data['extra_details'])
+        if customer_reference != '' and extra_details != '':
+            payee = "{1} ({0})".format(customer_reference, extra_details)
 
         date = transaction.data['date']
 
