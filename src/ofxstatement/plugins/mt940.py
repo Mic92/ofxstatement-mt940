@@ -115,6 +115,7 @@ class Parser(BaseStatementParser):
         # Use str() to prevent rounding errors
         bank_account_to = transaction.data.get('customer_reference')
         amount = Decimal(str(transaction.data['amount'].amount))
+        breakpoint()
         memo = transaction.data.get('transaction_details', transaction.data.get('purpose', ''))
         memo = memo.replace("\n", '')
         customer_reference = transaction.data.get('customer_reference', '')
